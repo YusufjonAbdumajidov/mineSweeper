@@ -27,6 +27,10 @@ header{
   background-color: #dcd6bc;
   padding: 24px 0px;
 }
+
+.restart{
+  cursor: pointer;
+}
   
   .grid {
     height: 640px;
