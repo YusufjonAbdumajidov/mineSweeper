@@ -24,7 +24,7 @@ header{
 .restart{
   cursor: pointer;
 }
-.grid {
+.field {
   height: 640px;
   width: 640px;
   display: flex;

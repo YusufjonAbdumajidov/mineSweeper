@@ -1,28 +1,30 @@
+let FIELD_WIDTH = 16;
+let BOMBS_AMOUNT = 40;
+
+
 const startGame = () => {
-  const grid = document.querySelector('.grid');
-  const flagsLeft = document.querySelector('#flags-left');
+  const FIELD = document.querySelector('.field');
+  const FLAGS_COUNTER = document.querySelector('#flags-counter');
   const result = document.querySelector('#result');
 
-  let width = 16
-  let bombAmount = 40
-  let flags = 0
-  let squares = []
-  let isGameOver = false
+  let FLAGS = 0;
+  let squares = [];
+  let isGameOver = false;
    
   //create Board
   function createBoard() {
-    flagsLeft.innerHTML = bombAmount
+    FLAGS_COUNTER.innerHTML = BOMBS_AMOUNT
   
   
-    const bombsArray = Array(bombAmount).fill('bomb')
-    const emptyArray = Array(width*width - bombAmount).fill('valid')
+    const bombsArray = Array(BOMBS_AMOUNT).fill('bomb')
+    const emptyArray = Array(FIELD_WIDTH *FIELD_WIDTH  - BOMBS_AMOUNT).fill('valid')
     const shuffledArray = [...bombsArray, ...emptyArray].sort(() => Math.random() -0.5)
   
-    for(let i = 0; i < width*width; i++) {
+    for(let i = 0; i < FIELD_WIDTH *FIELD_WIDTH ; i++) {
       const square = document.createElement('div')
       square.setAttribute('id', i)
       square.classList.add(shuffledArray[i])
-      grid.appendChild(square)
+      FIELD.appendChild(square)
       squares.push(square)
         
       square.addEventListener('click', function(e) {
@@ -37,18 +39,18 @@ const startGame = () => {
      
     for (let i = 0; i < squares.length; i++) {
       let total = 0
-      const isLeftEdge = (i % width === 0)
-      const isRightEdge = (i % width === width -1)
+      const isLeftEdge = (i % FIELD_WIDTH  === 0)
+      const isRightEdge = (i % FIELD_WIDTH  === FIELD_WIDTH  -1)
   
       if (squares[i].classList.contains('valid')) {
         if(i > 0 && !isLeftEdge && squares[i -1].classList.contains('bomb')) total ++
-        if(i > 15 && !isRightEdge && squares[i +1 -width].classList.contains('bomb')) total ++
-        if(i > 16 && squares[i -width].classList.contains('bomb')) total ++
-        if(i > 17 && !isLeftEdge && squares[i -1 -width].classList.contains('bomb')) total ++
+        if(i > 15 && !isRightEdge && squares[i +1 -FIELD_WIDTH ].classList.contains('bomb')) total ++
+        if(i > 16 && squares[i -FIELD_WIDTH ].classList.contains('bomb')) total ++
+        if(i > 17 && !isLeftEdge && squares[i -1 -FIELD_WIDTH ].classList.contains('bomb')) total ++
         if(i < 254 && !isRightEdge && squares[i +1].classList.contains('bomb')) total ++
-        if(i < 240 && !isLeftEdge && squares[i -1 +width].classList.contains('bomb')) total ++
-        if(i < 238 && !isRightEdge && squares[i +1 +width].classList.contains('bomb')) total ++
-        if(i < 239 && squares[i +width].classList.contains('bomb')) total ++
+        if(i < 240 && !isLeftEdge && squares[i -1 +FIELD_WIDTH ].classList.contains('bomb')) total ++
+        if(i < 238 && !isRightEdge && squares[i +1 +FIELD_WIDTH ].classList.contains('bomb')) total ++
+        if(i < 239 && squares[i +FIELD_WIDTH ].classList.contains('bomb')) total ++
           squares[i].setAttribute('data', total)
       }
     }
@@ -93,18 +95,18 @@ const startGame = () => {
   //add Flag 
   function addFlag(square) {
     if (isGameOver) return
-      if (!square.classList.contains('checked') && (flags < bombAmount)) {
+      if (!square.classList.contains('checked') && (FLAGS < BOMBS_AMOUNT)) {
         if (!square.classList.contains('flag')) {
           square.classList.add('flag')
           square.innerHTML = ' 🚩'
-          flags ++
-          flagsLeft.innerHTML = bombAmount- flags
+          FLAGS ++
+          FLAGS_COUNTER.innerHTML = BOMBS_AMOUNT- FLAGS
           checkForWin()
         } else {
           square.classList.remove('flag')
           square.innerHTML = ''
-          flags --
-          flagsLeft.innerHTML = bombAmount- flags
+          FLAGS --
+          FLAGS_COUNTER.innerHTML = BOMBS_AMOUNT- FLAGS
         }
       }
     }
@@ -136,8 +138,8 @@ const startGame = () => {
   
   //check neighboring squares once square is clicked
   function checkSquare(square, currentId) {
-    const isLeftEdge = (currentId % width === 0)
-    const isRightEdge = (currentId % width === width -1)
+    const isLeftEdge = (currentId % FIELD_WIDTH  === 0)
+    const isRightEdge = (currentId % FIELD_WIDTH  === FIELD_WIDTH  -1)
   
     setTimeout(() => {
       if (currentId > 0 && !isLeftEdge) {
@@ -146,17 +148,17 @@ const startGame = () => {
         click(newSquare)
       }
       if (currentId > 15 && !isRightEdge) {
-        const newId = squares[parseInt(currentId) +1 -width].id
+        const newId = squares[parseInt(currentId) +1 -FIELD_WIDTH ].id
         const newSquare = document.getElementById(newId)
         click(newSquare)
       }
       if (currentId > 16) {
-        const newId = squares[parseInt(currentId -width)].id
+        const newId = squares[parseInt(currentId -FIELD_WIDTH )].id
         const newSquare = document.getElementById(newId)
         click(newSquare)
       }
       if (currentId > 17 && !isLeftEdge) {
-        const newId = squares[parseInt(currentId) -1 -width].id
+        const newId = squares[parseInt(currentId) -1 -FIELD_WIDTH ].id
         const newSquare = document.getElementById(newId)
         click(newSquare)
       }
@@ -171,12 +173,12 @@ const startGame = () => {
         click(newSquare)
       }
       if (currentId < 238 && !isRightEdge) {
-        const newId = squares[parseInt(currentId) +1 +width].id
+        const newId = squares[parseInt(currentId) +1 +FIELD_WIDTH ].id
         const newSquare = document.getElementById(newId)
         click(newSquare)
       }
       if (currentId < 239) {
-        const newId = squares[parseInt(currentId) +width].id
+        const newId = squares[parseInt(currentId) +FIELD_WIDTH ].id
         const newSquare = document.getElementById(newId)
         click(newSquare)
       }
@@ -204,7 +206,7 @@ const startGame = () => {
         if (squares[i].classList.contains('flag') && squares[i].classList.contains('bomb')) {
           matches ++
         }
-        if (matches === bombAmount) {
+        if (matches === BOMBS_AMOUNT) {
           result.innerHTML = '🥳'
           isGameOver = true
         }
