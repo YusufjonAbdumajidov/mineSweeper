@@ -207,7 +207,7 @@ const startGame = () => {
           matches ++
         }
         if (matches === BOMBS_AMOUNT) {
-          result.innerHTML = '🥳'
+          result.innerHTML = '😎'
           isGameOver = true
         }
       }
